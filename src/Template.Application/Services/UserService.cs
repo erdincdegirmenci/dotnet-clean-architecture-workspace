@@ -4,31 +4,61 @@ using System.Linq;
 using System.Threading.Tasks;
 using Template.Application.DTOs;
 using Template.Application.Interfaces;
+using Template.Domain.Entities;
 
 namespace Template.Application.Services;
 
 public class UserService : IUserService
 {
-    private static readonly List<UserDto> _users = new();
+    private readonly IUserRepository _userRepository;
+    private readonly IPasswordHasher _passwordHasher;
 
-    public Task<UserDto?> GetByIdAsync(Guid id)
-        => Task.FromResult(_users.FirstOrDefault(u => u.Id == id));
-
-    public Task<IEnumerable<UserDto>> GetAllAsync()
-        => Task.FromResult(_users.AsEnumerable());
-
-    public Task<UserDto> CreateAsync(UserDto user)
+    public UserService(IUserRepository userRepository, IPasswordHasher passwordHasher)
     {
-        user.Id = Guid.NewGuid();
-        _users.Add(user);
-        return Task.FromResult(user);
+        _userRepository = userRepository;
+        _passwordHasher = passwordHasher;
     }
 
-    public Task<bool> DeleteAsync(Guid id)
+    public async Task<UserDto?> GetByIdAsync(Guid id)
     {
-        var user = _users.FirstOrDefault(u => u.Id == id);
-        if (user == null) return Task.FromResult(false);
-        _users.Remove(user);
-        return Task.FromResult(true);
+        var user = await _userRepository.GetByIdAsync(id);
+        return user == null ? null : new UserDto { Id = user.Id, UserName = user.UserName, Email = user.Email, Role = user.Role };
+    }
+
+    public async Task<IEnumerable<UserDto>> GetAllAsync()
+    {
+        // Gerçekçi senaryoda tüm kullanıcılar dönülür
+        return new List<UserDto>();
+    }
+
+    public async Task<UserDto> CreateAsync(UserDto userDto)
+    {
+        _passwordHasher.CreatePasswordHash(userDto.Password!, out var hash, out var salt);
+        var user = new User
+        {
+            Id = Guid.NewGuid(),
+            UserName = userDto.UserName,
+            Email = userDto.Email,
+            Role = userDto.Role,
+            PasswordHash = hash,
+            PasswordSalt = salt
+        };
+        await _userRepository.AddAsync(user);
+        return new UserDto { Id = user.Id, UserName = user.UserName, Email = user.Email, Role = user.Role };
+    }
+
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        // Gerçekçi senaryoda kullanıcı silme işlemi yapılır
+        return false;
+    }
+
+    public async Task<User?> ValidateUserAsync(string userName, string password)
+    {
+        var user = await _userRepository.GetByUserNameAsync(userName);
+        if (user == null) return null;
+        if (!_passwordHasher.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            return null;
+        return user;
     }
 } 

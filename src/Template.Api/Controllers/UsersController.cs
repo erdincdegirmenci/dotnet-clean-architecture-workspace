@@ -26,7 +26,7 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<ApiResponse<IEnumerable<UserDto>>>> GetAll()
     {
         var users = await _userService.GetAllAsync();
-        return Ok(ApiResponse<IEnumerable<UserDto>>.SuccessReponse(users));
+        return Ok(ApiResponse<IEnumerable<UserDto>>.SuccessResponse(users));
     }
 
     [HttpGet("{id}")]
@@ -36,7 +36,7 @@ public class UsersController : ControllerBase
         var user = await _userService.GetByIdAsync(id);
         if (user == null)
             return NotFound(ApiResponse<UserDto>.FailResponse("User not found"));
-        return Ok(ApiResponse<UserDto>.SuccessReponse(user));
+        return Ok(ApiResponse<UserDto>.SuccessResponse(user));
     }
 
     [HttpPost]
@@ -44,7 +44,7 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<ApiResponse<UserDto>>> Create(UserDto userDto)
     {
         var created = await _userService.CreateAsync(userDto);
-        return CreatedAtAction(nameof(GetById), new { id = created.Id }, ApiResponse<UserDto>.SuccessReponse(created));
+        return CreatedAtAction(nameof(GetById), new { id = created.Id }, ApiResponse<UserDto>.SuccessResponse(created));
     }
 
     [HttpDelete("{id}")]
@@ -54,22 +54,6 @@ public class UsersController : ControllerBase
         var result = await _userService.DeleteAsync(id);
         if (!result)
             return NotFound(ApiResponse<bool>.FailResponse("User not found"));
-        return Ok(ApiResponse<bool>.SuccessReponse(true));
-    }
-
-    [HttpPost("token")]
-    [AllowAnonymous]
-    public ActionResult<ApiResponse<string>> GenerateToken([FromBody] UserDto userDto)
-    {
-        // Demo amaçlı: UserDto'dan User entity'ye dönüştürüp token üretiyoruz
-        var user = new User
-        {
-            Id = userDto.Id == Guid.Empty ? Guid.NewGuid() : userDto.Id,
-            UserName = userDto.UserName,
-            Email = userDto.Email,
-            Role = userDto.Role ?? "User"
-        };
-        var token = _jwtTokenGenerator.GenerateToken(user);
-        return Ok(ApiResponse<string>.SuccessReponse(token));
+        return Ok(ApiResponse<bool>.SuccessResponse(true));
     }
 } 

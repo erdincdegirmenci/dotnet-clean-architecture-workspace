@@ -62,8 +62,6 @@ builder.Services.AddOpenTelemetry()
         .AddConsoleExporter());
 
 
-builder.Services.AddMiniProfiler(options => { options.RouteBasePath = "/profiler"; }).AddEntityFramework();
-
 // DI: Tüm modülleri ekle
 builder.Services.AddProjectModules(builder.Configuration);
 
@@ -142,11 +140,11 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseIpRateLimiting();
-app.UseMiniProfiler();
 
 app.MapControllers();
 
+
 // Örnek endpoint
-app.MapGet("/api/ping", () => ApiResponse<string>.SuccessReponse("pong"));
+app.MapGet("/api/ping", () => ApiResponse<string>.SuccessResponse("pong"));
 
 app.Run();

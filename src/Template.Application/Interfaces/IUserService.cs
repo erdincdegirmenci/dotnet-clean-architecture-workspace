@@ -1,6 +1,7 @@
 namespace Template.Application.Interfaces;
 
 using Template.Application.DTOs;
+using Template.Domain.Entities;
 
 public interface IUserService
 {
@@ -8,4 +9,5 @@ public interface IUserService
     Task<IEnumerable<UserDto>> GetAllAsync();
     Task<UserDto> CreateAsync(UserDto user);
     Task<bool> DeleteAsync(Guid id);
+    Task<User?> ValidateUserAsync(string userName, string? password);
 } 
