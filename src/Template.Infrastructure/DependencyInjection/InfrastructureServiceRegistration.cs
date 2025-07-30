@@ -2,6 +2,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Template.Infrastructure.Repositories;
 using Template.Infrastructure.Events;
 using Template.Infrastructure.Elastic;
+using Microsoft.Extensions.Configuration;
+using Template.Config;
+using Template.Infrastructure.Kafka;
 
 namespace Template.Infrastructure.DependencyInjection;
 

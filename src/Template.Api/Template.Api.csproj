@@ -5,14 +5,14 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>31a659d2-3d0d-4cd6-b956-86680952eba4</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AspNetCoreRateLimit" Version="5.0.0" />
     <PackageReference Include="Confluent.Kafka" Version="2.11.0" />
-    <PackageReference Include="Hangfire" Version="1.8.20" />
-    <PackageReference Include="Hangfire.Core" Version="1.8.20" />
-    <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.1.2" />
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
     <PackageReference Include="MediatR" Version="12.1.1" />
@@ -30,6 +30,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.7" />
     <PackageReference Include="Microsoft.FeatureManagement" Version="4.2.1" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.36.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
     <PackageReference Include="NEST" Version="7.17.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="OpenTelemetry" Version="1.12.0" />
@@ -38,8 +39,6 @@
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.12.0" />
     <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.12.0" />
     <PackageReference Include="Polly" Version="8.6.2" />
-    <PackageReference Include="Quartz" Version="3.14.0" />
-    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.14.0" />
     <PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
@@ -53,6 +52,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Template.Application\Template.Application.csproj" />
+    <ProjectReference Include="..\Template.Config\Template.Config.csproj" />
     <ProjectReference Include="..\Template.Domain\Template.Domain.csproj" />
     <ProjectReference Include="..\Template.Identity\Template.Identity.csproj" />
     <ProjectReference Include="..\Template.Shared\Template.Shared.csproj" />

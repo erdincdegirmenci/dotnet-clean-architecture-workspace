@@ -1,24 +1,34 @@
-using Serilog;
+using AspNetCoreRateLimit;
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.FeatureManagement;
 using Microsoft.OpenApi.Models;
-using Template.Shared;
-using Template.Shared.Extensions;
-using AspNetCoreRateLimit;
-using Mapster;
-using Quartz;
-using Hangfire;
-using Hangfire.MemoryStorage;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using OpenTelemetry.Metrics;
 using Polly;
-using Polly.Retry;
 using Polly.Extensions.Http;
+using Serilog;
+using Serilog.Sinks.Elasticsearch;
+using Template.Config;
+using Template.Infrastructure.Kafka;
+using Template.Shared;
+using Template.Shared.Extensions;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Cors policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 // Serilog
 builder.Host.UseSerilog((ctx, lc) => lc
@@ -53,14 +63,40 @@ builder.Services.AddHttpClient("emp", (sp, client) =>
 })
 .AddPolicyHandler(retryPolicy);
 
-builder.Services.AddHangfire(x => x.UseMemoryStorage());
-builder.Services.AddQuartz();
-builder.Services.AddOpenTelemetry()
-    .WithTracing(tracing => tracing
-        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("MyServiceName"))
-        .AddAspNetCoreInstrumentation()
-        .AddConsoleExporter());
 
+var featureFlags = builder.Configuration.GetSection("FeatureManagement").Get<ProjectFeatureFlags>() ?? new ProjectFeatureFlags();
+
+if (featureFlags.UseOpenTelemetry)
+{
+    builder.Services.AddOpenTelemetry()
+        .WithTracing(tracing => tracing
+            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("MyServiceName"))
+            .AddAspNetCoreInstrumentation()
+            .AddConsoleExporter());
+}
+
+
+if (featureFlags.UseElastic)
+{
+    builder.Host.UseSerilog((ctx, lc) => lc
+    .ReadFrom.Configuration(ctx.Configuration)
+    .WriteTo.Console()
+    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(
+        ctx.Configuration["ElasticSearchConfiguration:Uri"]))
+    {
+        AutoRegisterTemplate = true,
+        IndexFormat = string.Format(ctx.Configuration["ElasticSearchConfiguration:Index"], DateTime.UtcNow),
+        AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv7
+    }));
+}
+
+if (featureFlags.UseKafka)
+{
+    builder.Services.AddSingleton<IKafkaService, KafkaService>();
+    builder.Services.AddHostedService<KafkaConsumerHostedService>();
+}
+
+builder.Services.AddSingleton(featureFlags);
 
 // DI: Tüm modülleri ekle
 builder.Services.AddProjectModules(builder.Configuration);
@@ -137,14 +173,18 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseIpRateLimiting();
 
 app.MapControllers();
 
-
 // Örnek endpoint
 app.MapGet("/api/ping", () => ApiResponse<string>.SuccessResponse("pong"));
+
+var logger = Log.ForContext<Program>();
+logger.Information("Elastic log testi başarılı! Zaman: {Tarih}", DateTime.Now);
 
 app.Run();

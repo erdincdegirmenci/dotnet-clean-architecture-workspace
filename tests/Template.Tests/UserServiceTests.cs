@@ -13,7 +13,7 @@ public class UserServiceTests
 
     public UserServiceTests()
     {
-        _userService = new UserService();
+        //_userService = new UserService();
     }
 
     [Fact]

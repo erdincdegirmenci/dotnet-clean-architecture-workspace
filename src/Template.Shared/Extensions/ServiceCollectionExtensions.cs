@@ -4,6 +4,7 @@ using Template.Application.DependencyInjection;
 using Template.Infrastructure.DependencyInjection;
 using Template.Persistence.DependencyInjection;
 using Template.Identity.DependencyInjection;
+using Template.Config;
 
 namespace Template.Shared.Extensions;
 
