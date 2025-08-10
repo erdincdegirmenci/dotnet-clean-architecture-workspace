@@ -8,4 +8,5 @@ public class User
     public string? Role { get; set; }
     public byte[] PasswordHash { get; set; } = Array.Empty<byte>();
     public byte[] PasswordSalt { get; set; } = Array.Empty<byte>();
+    public bool IsActive { get; set; }
 } 

@@ -21,7 +21,7 @@ public class UserService : IUserService
 
     public async Task<UserDto?> GetByIdAsync(Guid id)
     {
-        var user = await _userRepository.GetByIdAsync(id);
+        var user = _userRepository.GetUserById(id);
         return user == null ? null : new UserDto { Id = user.Id, UserName = user.UserName, Email = user.Email, Role = user.Role };
     }
 
@@ -31,7 +31,7 @@ public class UserService : IUserService
         return new List<UserDto>();
     }
 
-    public async Task<UserDto> CreateAsync(UserDto userDto)
+    public async Task<int> CreateAsync(UserDto userDto)
     {
         _passwordHasher.CreatePasswordHash(userDto.Password!, out var hash, out var salt);
         var user = new User
@@ -43,8 +43,7 @@ public class UserService : IUserService
             PasswordHash = hash,
             PasswordSalt = salt
         };
-        await _userRepository.AddAsync(user);
-        return new UserDto { Id = user.Id, UserName = user.UserName, Email = user.Email, Role = user.Role };
+        return _userRepository.CreateUser(user);
     }
 
     public async Task<bool> DeleteAsync(Guid id)
@@ -55,7 +54,7 @@ public class UserService : IUserService
 
     public async Task<User?> ValidateUserAsync(string userName, string password)
     {
-        var user = await _userRepository.GetByUserNameAsync(userName);
+        var user = _userRepository.GetUserByUserName(userName);
         if (user == null) return null;
         if (!_passwordHasher.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             return null;

@@ -11,7 +11,7 @@ public static class ApplicationServiceRegistration
     {
         services.AddScoped<IUserService, UserService>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
-        services.AddSingleton<IUserRepository, InMemoryUserRepository>();
+        services.AddSingleton<InMemoryUserRepository, InMemoryUserRepository>();
         // Diğer servisler buraya eklenebilir
         return services;
     }

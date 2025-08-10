@@ -11,10 +11,11 @@ using Polly;
 using Polly.Extensions.Http;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
-using Template.Config;
+using Template.Api.Common;
+using Template.Api.Extensions;
+using Template.Api.Middlewares;
+using Template.Infrastructure.Config;
 using Template.Infrastructure.Kafka;
-using Template.Shared;
-using Template.Shared.Extensions;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -92,6 +93,16 @@ if (featureFlags.UseElastic)
 
 if (featureFlags.UseKafka)
 {
+    builder.Host.UseSerilog((ctx, lc) =>
+    {
+        var kafkaService = builder.Services.BuildServiceProvider().GetRequiredService<IKafkaService>();
+        var topic = ctx.Configuration["Kafka:Topic"];
+
+        lc.ReadFrom.Configuration(ctx.Configuration)
+          .WriteTo.Console()
+          .WriteTo.Sink(new SerilogKafkaSink(kafkaService, topic));
+    });
+
     builder.Services.AddSingleton<IKafkaService, KafkaService>();
     builder.Services.AddHostedService<KafkaConsumerHostedService>();
 }

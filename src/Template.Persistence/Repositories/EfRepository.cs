@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Template.Infrastructure.Repositories;
+using Template.Domain.Interfaces;
 
 namespace Template.Persistence.Repositories;
 

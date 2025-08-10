@@ -3,17 +3,17 @@ using Template.Domain.Entities;
 
 namespace Template.Application.Repositories;
 
-public class InMemoryUserRepository : IUserRepository
+public class InMemoryUserRepository : IInMemoryUserRepository
 {
     private static readonly List<User> _users = new();
 
-    public Task<User?> GetByUserNameAsync(string userName)
+    public Task<User?> GetByUserName(string userName)
         => Task.FromResult(_users.FirstOrDefault(u => u.UserName == userName));
 
-    public Task<User?> GetByIdAsync(Guid id)
+    public Task<User?> GetById(Guid id)
         => Task.FromResult(_users.FirstOrDefault(u => u.Id == id));
 
-    public Task AddAsync(User user)
+    public Task Add(User user)
     {
         _users.Add(user);
         return Task.CompletedTask;

@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Template.Api.Common;
 using Template.Application.DTOs;
 using Template.Application.Interfaces;
-using Template.Identity.Services;
-using Template.Shared;
 using Template.Domain.Entities;
+using Template.Infrastructure.Authentication;
 
 namespace Template.Api.Controllers;
 
@@ -12,15 +12,18 @@ namespace Template.Api.Controllers;
 [Route("api/[controller]")]
 public class AuthenticationController : ControllerBase
 {
-    private static readonly Dictionary<string, string> _refreshTokens = new(); // refreshToken, userName
+    private static readonly Dictionary<string, string> _refreshTokens = new(); 
 
     private readonly IUserService _userService;
     private readonly JwtTokenGenerator _jwtTokenGenerator;
+    private readonly ILogger<AuthenticationController> _logManager;
 
-    public AuthenticationController(IUserService userService, JwtTokenGenerator jwtTokenGenerator)
+
+    public AuthenticationController(IUserService userService, JwtTokenGenerator jwtTokenGenerator, ILogger<AuthenticationController> logManager)
     {
         _userService = userService;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _logManager = logManager;
     }
 
     [HttpPost("login")]
@@ -29,7 +32,10 @@ public class AuthenticationController : ControllerBase
     {
         var user = await _userService.ValidateUserAsync(request.UserName, request.Password);
         if (user == null)
+        {
+            _logManager.LogWarning("Login attempt failed for username: {UserName} - Invalid credentials", request.UserName);
             return Unauthorized(ApiResponse<object>.FailResponse("Invalid credentials"));
+        }
 
         var accessToken = _jwtTokenGenerator.GenerateToken(user);
         var refreshToken = Guid.NewGuid().ToString();
@@ -42,7 +48,7 @@ public class AuthenticationController : ControllerBase
     public async Task<ActionResult<ApiResponse<UserDto>>> Register([FromBody] UserDto userDto)
     {
         var created = await _userService.CreateAsync(userDto);
-        return Ok(ApiResponse<UserDto>.SuccessResponse(created, "User registered"));
+        return Ok(ApiResponse<int>.SuccessResponse(created, "User registered"));
     }
 
     [HttpPost("refresh")]

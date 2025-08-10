@@ -1,10 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
-using Template.Infrastructure.Repositories;
-using Template.Infrastructure.Events;
+using Template.Infrastructure.Authentication;
 using Template.Infrastructure.Elastic;
-using Microsoft.Extensions.Configuration;
-using Template.Config;
-using Template.Infrastructure.Kafka;
+using Template.Infrastructure.Events;
 
 namespace Template.Infrastructure.DependencyInjection;
 
@@ -15,7 +12,7 @@ public static class InfrastructureServiceRegistration
         // Repository ve UnitOfWork
         // services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
         // services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+        services.AddScoped<JwtTokenGenerator>();
         // Kafka, Elastic örnekleri
         services.AddSingleton<KafkaEventListener>();
         services.AddSingleton<ElasticSearchService>();

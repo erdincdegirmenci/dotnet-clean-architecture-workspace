@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Template.Api.Common;
 using Template.Application.DTOs;
 using Template.Application.Interfaces;
-using Template.Domain.Entities;
-using Template.Identity.Services;
-using Template.Shared;
+using Template.Infrastructure.Authentication;
 
 namespace Template.Api.Controllers;
 
@@ -44,7 +43,7 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<ApiResponse<UserDto>>> Create(UserDto userDto)
     {
         var created = await _userService.CreateAsync(userDto);
-        return CreatedAtAction(nameof(GetById), new { id = created.Id }, ApiResponse<UserDto>.SuccessResponse(created));
+        return CreatedAtAction(nameof(GetById), new { id = created }, ApiResponse<int>.SuccessResponse(created));
     }
 
     [HttpDelete("{id}")]
