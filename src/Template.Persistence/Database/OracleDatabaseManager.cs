@@ -1,14 +1,14 @@
-﻿using Oracle.ManagedDataAccess.Client;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Dapper;
+using Dapper.Oracle;
+using Oracle.ManagedDataAccess.Client;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Reflection;
+using Template.Application.Managers;
 using Template.Domain.Interfaces;
-using Template.Persistence.Config;
-using Template.Persistence.Repositories;
-using Dapper;
-using Dapper.Oracle;
 using Template.Persistence.Helper;
+using Template.Persistence.Repositories;
 
 namespace Template.Persistence.Database
 {

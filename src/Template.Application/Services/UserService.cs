@@ -1,3 +1,4 @@
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,37 +13,40 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly IMapper _mapper;
 
-    public UserService(IUserRepository userRepository, IPasswordHasher passwordHasher)
+    public UserService(IUserRepository userRepository, IPasswordHasher passwordHasher, IMapper mapper)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
+        _mapper = mapper;
     }
 
     public async Task<UserDto?> GetByIdAsync(Guid id)
     {
         var user = _userRepository.GetUserById(id);
-        return user == null ? null : new UserDto { Id = user.Id, UserName = user.UserName, Email = user.Email, Role = user.Role };
+        if (user == null) return null;
+
+        var dto = _mapper.Map<UserDto>(user);
+        return dto;
     }
 
     public async Task<IEnumerable<UserDto>> GetAllAsync()
     {
-        // Gerçekçi senaryoda tüm kullanıcılar dönülür
-        return new List<UserDto>();
+        var users = _userRepository.GetAllUser();
+        var dtos = _mapper.Map<IEnumerable<UserDto>>(users);
+        return dtos;
     }
 
     public async Task<int> CreateAsync(UserDto userDto)
     {
         _passwordHasher.CreatePasswordHash(userDto.Password!, out var hash, out var salt);
-        var user = new User
-        {
-            Id = Guid.NewGuid(),
-            UserName = userDto.UserName,
-            Email = userDto.Email,
-            Role = userDto.Role,
-            PasswordHash = hash,
-            PasswordSalt = salt
-        };
+
+        var user = _mapper.Map<User>(userDto);
+        user.Id = Guid.NewGuid();
+        user.PasswordHash = hash;
+        user.PasswordSalt = salt;
+
         return _userRepository.CreateUser(user);
     }
 

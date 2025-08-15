@@ -1,17 +1,12 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Dapper;
+using Microsoft.Data.SqlClient;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using Template.Application.Managers;
 using Template.Domain.Interfaces;
-using Template.Persistence.Config;
 using Template.Persistence.Repositories;
-using Dapper;
 
 namespace Template.Persistence.Database
 {

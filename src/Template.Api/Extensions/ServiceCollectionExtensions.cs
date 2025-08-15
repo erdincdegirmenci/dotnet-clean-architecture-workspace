@@ -11,6 +11,7 @@ namespace Template.Api.Extensions
             services.AddApplicationServices();
             services.AddInfrastructureServices();
             services.AddPersistenceServices(configuration.GetConnectionString("DefaultConnection")!);
+            services.AddMappingProfiles();
             // Diğer modüller ve konfigürasyonlar buraya eklenebilir
             return services;
         }

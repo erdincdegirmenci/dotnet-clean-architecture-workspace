@@ -12,9 +12,7 @@ namespace Template.Application.Interfaces
         IEnumerable<User> GetAllUser();
         User? GetUserById(Guid id);
         User? GetUserByUserName(string username);
-        User? GetActiveUserByUsername(string username);
         int CreateUser(User user);
-        int UpdateUserStatus(string username, bool isActive);
     }
 
 }

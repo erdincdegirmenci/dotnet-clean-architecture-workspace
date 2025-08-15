@@ -1,14 +1,12 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.IdentityModel.Protocols;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Dapper;
+using MySql.Data.MySqlClient;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Reflection;
+using Template.Application.Managers;
 using Template.Domain.Interfaces;
-using Template.Persistence.Config;
-using MySql.Data.MySqlClient;
 using Template.Persistence.Repositories;
-using Dapper;
 
 namespace Template.Persistence.Database
 {

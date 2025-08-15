@@ -12,7 +12,23 @@ namespace Template.Domain.QueryTemplate
 
         public UserQueryTemplate()
         {
-            _queries.Add("UserDAO.GetAllUser", @"SELECT * FROM [USER_TABLE]");
+            _queries.Add("UserDAO.GetAllUsers", @"SELECT Id, UserName, Email, Role, PasswordHash, PasswordSalt FROM [USER_TABLE]");
+
+            _queries.Add("UserDAO.GetUserById", @"SELECT Id, UserName, Email, Role, PasswordHash, PasswordSalt 
+                                                  FROM [USER_TABLE] 
+                                                  WHERE Id = @Guid");
+
+            _queries.Add("UserDAO.GetUserByUserName", @"SELECT Id, UserName, Email, Role, PasswordHash, PasswordSalt 
+                                                    FROM [USER_TABLE] 
+                                                    WHERE UserName = @Username");
+
+            _queries.Add("UserDAO.CreateUser", @"INSERT INTO [USER_TABLE] (Id, UserName, Email, Role, PasswordHash, PasswordSalt) 
+                                                    VALUES (@Id, @UserName, @Email, @Role, @PasswordHash, @PasswordSalt)");
+
+            _queries.Add("UserDAO.GetUsersByDynamicCondition", @"SELECT Id, UserName, Email, Role, PasswordHash, PasswordSalt 
+                                                  FROM [USER_TABLE] 
+                                                  [DynamicWhereClause]");
+
         }
         public string GetQuery(string key)
         {

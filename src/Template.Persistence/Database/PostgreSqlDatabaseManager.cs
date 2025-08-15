@@ -4,8 +4,8 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Reflection;
+using Template.Application.Managers;
 using Template.Domain.Interfaces;
-using Template.Persistence.Config;
 using Template.Persistence.Repositories;
 
 namespace Template.Persistence.Database

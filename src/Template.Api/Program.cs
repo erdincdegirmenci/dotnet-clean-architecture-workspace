@@ -111,6 +111,7 @@ builder.Services.AddSingleton(featureFlags);
 
 // DI: Tüm modülleri ekle
 builder.Services.AddProjectModules(builder.Configuration);
+ConfigManager.LoadConfig(builder.Configuration);
 
 // JWT Auth
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

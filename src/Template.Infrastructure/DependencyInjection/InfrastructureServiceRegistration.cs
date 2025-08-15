@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
+using Template.Application.Managers;
 using Template.Infrastructure.Authentication;
+using Template.Infrastructure.Config;
 using Template.Infrastructure.Elastic;
 using Template.Infrastructure.Events;
 
@@ -16,7 +18,9 @@ public static class InfrastructureServiceRegistration
         // Kafka, Elastic örnekleri
         services.AddSingleton<KafkaEventListener>();
         services.AddSingleton<ElasticSearchService>();
+        services.AddSingleton<IConfigManager, ConfigManager>();
         // Diğer altyapı servisleri buraya eklenebilir
+
         return services;
     }
 } 

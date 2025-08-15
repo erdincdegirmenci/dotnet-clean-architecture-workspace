@@ -20,6 +20,11 @@ namespace Template.Persistence.Repositories
         {
         }
 
+        public IEnumerable<User> GetAllUser()
+        {
+            var sql = _queryTemplate.GetQuery("UserDAO.GetAllUsers");
+            return base.SelectWithTemplate<User>(sql);
+        }
         public User? GetUserById(Guid id)
         {
             var sql = _queryTemplate.GetQuery("UserDAO.GetUserById");
@@ -30,36 +35,25 @@ namespace Template.Persistence.Repositories
             var sql = _queryTemplate.GetQuery("UserDAO.GetUserByUserName");
             return base.SelectWithTemplate<User>(sql, new { Username = username }).FirstOrDefault();
         }
-        public User? GetActiveUserByUsername(string username)
-        {
-            var sql = _queryTemplate.GetQuery("UserDAO.GetActiveUserByUsername");
-            return base.SelectWithTemplate<User>(sql, new { Username = username }).FirstOrDefault();
-        }
-
         public int CreateUser(User user)
         {
             var sql = _queryTemplate.GetQuery("UserDAO.CreateUser");
-            return base.InsertWithTemplate(sql, new
-            {
-                user.UserName,
-                user.PasswordSalt,
-                user.Email,
-                user.IsActive,
-                CreateDate = DateTime.UtcNow,
-                CreateUser = user.UserName
-            });
+            return base.InsertWithTemplate(sql, user);
         }
-
-        public int UpdateUserStatus(string username, bool isActive)
+        public IEnumerable<User> GetUsersByDynamicCondition(string? userName = null, string? role = null)
         {
-            var sql = _queryTemplate.GetQuery("UserDAO.SetUserStatus");
-            return base.InsertWithTemplate(sql, new { Username = username, IsActive = isActive });
-        }
+            string whereClause = "";
 
-        public IEnumerable<User> GetAllUser()
-        {
-            var sql = _queryTemplate.GetQuery("UserDAO.GetAllUsers");
+            if (!String.IsNullOrEmpty(userName))
+                whereClause = $"UserName = '{userName}'";
+            else if (!String.IsNullOrEmpty(role))
+                whereClause = $"Role = '{role}'";
+            else
+                whereClause = "1=1"; // Filtre yoksa tüm kayıtları al
+
+            var sql = _queryTemplate.GetQuery("UserDAO.GetUsersByDynamicCondition", whereClause);
             return base.SelectWithTemplate<User>(sql);
         }
+
     }
 }

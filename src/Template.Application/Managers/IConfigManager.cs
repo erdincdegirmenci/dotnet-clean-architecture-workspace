@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Template.Persistence.Config
+namespace Template.Application.Managers
 {
     /// <summary>
     /// Uygulama konfigurasyonlarını yöneten sınıfların implemente edeceği interface
@@ -17,8 +17,5 @@ namespace Template.Persistence.Config
         /// <param name="configName">Konfigurasyon adı bilgisi</param>
         /// <returns>Konfigurasyon verisini döner</returns>
         string GetConfig(string configName);
-
-
-        string GetConfig(string configName, int tenant);
     }
 }
