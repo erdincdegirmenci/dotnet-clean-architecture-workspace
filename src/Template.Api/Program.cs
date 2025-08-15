@@ -1,7 +1,9 @@
 using AspNetCoreRateLimit;
 using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.FeatureManagement;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
@@ -16,6 +18,7 @@ using Template.Api.Extensions;
 using Template.Api.Middlewares;
 using Template.Infrastructure.Config;
 using Template.Infrastructure.Kafka;
+using Template.Infrastructure.Managers;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -167,6 +170,11 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// TransactionContextManager için
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+
 // Controllers
 builder.Services.AddControllers();
 
@@ -183,6 +191,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseSession();
 
 app.UseHttpsRedirection();
 app.UseRouting();

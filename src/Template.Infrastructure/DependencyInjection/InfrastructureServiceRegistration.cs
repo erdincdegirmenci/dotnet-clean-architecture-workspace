@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Template.Application.Managers;
 using Template.Infrastructure.Authentication;
-using Template.Infrastructure.Config;
 using Template.Infrastructure.Elastic;
 using Template.Infrastructure.Events;
+using Template.Infrastructure.Managers;
 
 namespace Template.Infrastructure.DependencyInjection;
 
@@ -19,6 +19,7 @@ public static class InfrastructureServiceRegistration
         services.AddSingleton<KafkaEventListener>();
         services.AddSingleton<ElasticSearchService>();
         services.AddSingleton<IConfigManager, ConfigManager>();
+        services.AddScoped<ITransactionContextManager, TransactionContextManager>();
         // Diğer altyapı servisleri buraya eklenebilir
 
         return services;

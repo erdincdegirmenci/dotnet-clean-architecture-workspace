@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Template.Application.Managers;
 
-namespace Template.Infrastructure.Config
+namespace Template.Infrastructure.Managers
 {
     public class ConfigManager : IConfigManager
     {
