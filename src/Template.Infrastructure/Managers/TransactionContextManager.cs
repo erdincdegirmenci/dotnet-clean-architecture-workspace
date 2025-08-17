@@ -30,7 +30,7 @@ namespace Template.Infrastructure.Managers
                 }
                 else
                 {
-                    if (string.IsNullOrEmpty(_httpContextAccessor.HttpContext.Session.GetString("TransactionContext")))
+                    if (String.IsNullOrEmpty(_httpContextAccessor.HttpContext.Session.GetString("TransactionContext")))
                     {
                         //Oncelikli olarak headerdan gelen set edilir
                         var transactionIdentifier = _httpContextAccessor.HttpContext.Request.Headers[TransactionContextConst.TRANSACTION_IDENTIFIER_HEADER];
@@ -55,7 +55,7 @@ namespace Template.Infrastructure.Managers
 
                 string transactionIdentifier = _httpContextAccessor.HttpContext.Session.GetString("TransactionContext");
 
-                if (string.IsNullOrEmpty(transactionIdentifier))
+                if (String.IsNullOrEmpty(transactionIdentifier))
                 {
                     SetTransaction();
                     transactionIdentifier = _httpContextAccessor.HttpContext.Session.GetString("TransactionContext");
@@ -120,7 +120,7 @@ namespace Template.Infrastructure.Managers
             if (_httpContextAccessor != null && _httpContextAccessor.HttpContext != null)
             {
                 //Eger language daha once set edilmediyse headera bakar ve geleni set eder
-                if (string.IsNullOrEmpty(_httpContextAccessor.HttpContext.Session.GetString("TransactionLanguage")))
+                if (String.IsNullOrEmpty(_httpContextAccessor.HttpContext.Session.GetString("TransactionLanguage")))
                 {
                     var transactionlanguage = _httpContextAccessor.HttpContext.Request.Headers[TransactionContextConst.TRANSACTION_LANGUAGE_HEADER];
                     if (!String.IsNullOrEmpty(transactionlanguage))

@@ -3,21 +3,20 @@ using Microsoft.AspNetCore.Mvc;
 using Template.Api.Common;
 using Template.Application.DTOs;
 using Template.Application.Interfaces;
-using Template.Infrastructure.Authentication;
+using Template.Infrastructure.Security;
 
 namespace Template.Api.Controllers;
 
-[ApiController]
 [Route("api/[controller]")]
-public class UsersController : ControllerBase
+public class UsersController : BaseController
 {
     private readonly IUserService _userService;
-    private readonly JwtTokenGenerator _jwtTokenGenerator;
+    private readonly IJwtTokenHandler _jwtTokenHandler;
 
-    public UsersController(IUserService userService, JwtTokenGenerator jwtTokenGenerator)
+    public UsersController(IUserService userService, IJwtTokenHandler jwtTokenGenerator)
     {
         _userService = userService;
-        _jwtTokenGenerator = jwtTokenGenerator;
+        _jwtTokenHandler = jwtTokenGenerator;
     }
 
     [HttpGet]

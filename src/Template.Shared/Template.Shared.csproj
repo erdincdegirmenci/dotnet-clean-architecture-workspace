@@ -12,11 +12,4 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.7" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Template.Application\Template.Application.csproj" />
-    <ProjectReference Include="..\Template.Config\Template.Config.csproj" />
-    <ProjectReference Include="..\Template.Infrastructure\Template.Infrastructure.csproj" />
-    <ProjectReference Include="..\Template.Persistence\Template.Persistence.csproj" />
-  </ItemGroup>
-
 </Project>

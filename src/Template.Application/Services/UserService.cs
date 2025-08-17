@@ -42,12 +42,14 @@ public class UserService : IUserService
     {
         _passwordHasher.CreatePasswordHash(userDto.Password!, out var hash, out var salt);
 
-        var user = _mapper.Map<User>(userDto);
-        user.Id = Guid.NewGuid();
-        user.PasswordHash = hash;
-        user.PasswordSalt = salt;
+        //var user = _mapper.Map<User>(userDto);
+        //user.Id = Guid.NewGuid();
+        //user.PasswordHash = hash;
+        //user.PasswordSalt = salt;
 
-        return _userRepository.CreateUser(user);
+        //return _userRepository.CreateUser(user);
+
+        return 1;
     }
 
     public async Task<bool> DeleteAsync(Guid id)
@@ -56,12 +58,14 @@ public class UserService : IUserService
         return false;
     }
 
-    public async Task<User?> ValidateUserAsync(string userName, string password)
+    public async Task<UserDto?> ValidateUserAsync(string userName, string password)
     {
         var user = _userRepository.GetUserByUserName(userName);
         if (user == null) return null;
         if (!_passwordHasher.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             return null;
-        return user;
+
+        var dto = _mapper.Map<UserDto>(user);
+        return dto;
     }
 } 

@@ -9,5 +9,5 @@ public interface IUserService
     Task<IEnumerable<UserDto>> GetAllAsync();
     Task<int> CreateAsync(UserDto user);
     Task<bool> DeleteAsync(Guid id);
-    Task<User?> ValidateUserAsync(string userName, string? password);
+    Task<UserDto?> ValidateUserAsync(string userName, string? password);
 } 

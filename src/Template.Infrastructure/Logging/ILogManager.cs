@@ -2,7 +2,7 @@
 
 namespace Template.Infrastructure.Logging
 {
-    public interface ILogManager
+    public interface ILogManager<T>
     {
         void Log(LogLevel level, string message, Exception? exception = null, object? payload = null);
         void Info(string message, object? payload = null);

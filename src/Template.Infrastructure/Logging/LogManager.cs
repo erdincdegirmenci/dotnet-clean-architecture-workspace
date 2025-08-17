@@ -2,11 +2,11 @@
 
 namespace Template.Infrastructure.Logging
 {
-    public class LogManager : ILogManager
+    public class LogManager<T> : ILogManager<T>
     {
-        private readonly ILogger<LogManager> _logger;
+        private readonly ILogger<LogManager<T>> _logger;
 
-        public LogManager(ILogger<LogManager> logger)
+        public LogManager(ILogger<LogManager<T>> logger)
         {
             _logger = logger;
         }

@@ -31,11 +31,14 @@ namespace Template.Infrastructure.Managers
             configurations["FeatureManagement:UseElastic"] = configuration["FeatureManagement:UseElastic"];
             configurations["FeatureManagement:UseRedis"] = configuration["FeatureManagement:UseRedis"];
             configurations["FeatureManagement:UseOpenTelemetry"] = configuration["FeatureManagement:UseOpenTelemetry"];
+            configurations["FeatureManagement:UseSwagger"] = configuration["FeatureManagement:UseSwagger"];
 
-            // Jwt
-            configurations["Jwt:Issuer"] = configuration["Jwt:Issuer"];
-            configurations["Jwt:Audience"] = configuration["Jwt:Audience"];
-            configurations["Jwt:Key"] = configuration["Jwt:Key"];
+            // JwtOptions
+            configurations["JwtOptions:Issuer"] = configuration["JwtOptions:Issuer"];
+            configurations["JwtOptions:Audience"] = configuration["JwtOptions:Audience"];
+            configurations["JwtOptions:SecurityKey"] = configuration["JwtOptions:SecurityKey"];
+            configurations["JwtOptions:TokenExpiration"] = configuration["JwtOptions:TokenExpiration"];
+            configurations["JwtOptions:RefreshTokenExpiration"] = configuration["JwtOptions:RefreshTokenExpiration"];
 
             // Redis
             configurations["Redis:ConnectionString"] = configuration["Redis:ConnectionString"];

@@ -1,9 +1,6 @@
 using AspNetCoreRateLimit;
-using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.FeatureManagement;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
@@ -16,6 +13,7 @@ using Serilog.Sinks.Elasticsearch;
 using Template.Api.Common;
 using Template.Api.Extensions;
 using Template.Api.Middlewares;
+using Template.Infrastructure.Caching;
 using Template.Infrastructure.Config;
 using Template.Infrastructure.Kafka;
 using Template.Infrastructure.Managers;
@@ -57,7 +55,7 @@ builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>()
 
 // MediatR, Mapster, Polly, Hangfire, Quartz, OpenTelemetry, MiniProfiler
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
-builder.Services.AddMapster();
+
 
 var retryPolicy = HttpPolicyExtensions.HandleTransientHttpError().RetryAsync(3);
 
@@ -126,9 +124,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+            ValidIssuer = builder.Configuration["JwtOptions:Issuer"],
+            ValidAudience = builder.Configuration["JwtOptions:Audience"],
+            IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JwtOptions:SecurityKey"]))
         };
     });
 builder.Services.AddAuthorization(options =>
@@ -145,19 +143,22 @@ builder.Services.AddApiVersioning(options =>
     options.ApiVersionReader = new UrlSegmentApiVersionReader();
 });
 
-// Swagger + JWT
-builder.Services.AddSwaggerGen(c =>
+// Swagger + JWT Authorize
+
+if (featureFlags.UseSwagger)
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Template API", Version = "v1" });
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    builder.Services.AddSwaggerGen(c =>
     {
-        In = ParameterLocation.Header,
-        Description = "Please enter JWT with Bearer into field",
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Template API", Version = "v1" });
+        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            In = ParameterLocation.Header,
+            Description = "Please enter JWT with Bearer into field",
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer"
+        });
+        c.AddSecurityRequirement(new OpenApiSecurityRequirement {
         {
             new OpenApiSecurityScheme {
                 Reference = new OpenApiReference {
@@ -168,12 +169,27 @@ builder.Services.AddSwaggerGen(c =>
             new string[] { }
         }
     });
-});
+    });
+}
+
+
 
 // TransactionContextManager için
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+//Filters
+builder.Services.AddScoped<CustomExceptionFilter>();
+
+//Caching
+builder.Services.AddMemoryCache();
+MemoryCacheManager.LocalScopeKey = builder.Configuration.GetValue<string>("AppSettings:LocalScopeKey");
 
 // Controllers
 builder.Services.AddControllers();
@@ -184,14 +200,21 @@ var app = builder.Build();
 app.UseSerilogRequestLogging();
 
 // Exception Middleware
-app.UseMiddleware<ExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseHsts();
+}
+
+if (featureFlags.UseSwagger)
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseSession();
 
 app.UseHttpsRedirection();

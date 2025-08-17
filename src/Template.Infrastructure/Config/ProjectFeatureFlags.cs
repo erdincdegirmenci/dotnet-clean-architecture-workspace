@@ -15,5 +15,6 @@ namespace Template.Infrastructure.Config
         public bool UseRedis { get; set; }
         public bool UseElastic { get; set; }
         public bool UseOpenTelemetry { get; set; }
+        public bool UseSwagger { get; set; }
     }
 }
