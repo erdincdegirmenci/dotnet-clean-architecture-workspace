@@ -180,11 +180,6 @@ To remove containers and volumes:
 
 docker compose down -v
 
-
-The repository includes Docker Compose configuration and a dedicated Logstash configuration. {"fallbackMarkdown":"(GitHub
-)","reference":{"matched_text":"","prefix":null,"start_idx":6172,"end_idx":6189,"safe_urls":["https://github.com/erdincdegirmenci/dotnet-clean-architecture-workspace"],"refs":[],"alt":"(GitHub
-)","prompt_text":null,"type":"grouped_webpages","items":[{"title":"GitHub - erdincdegirmenci/dotnet-clean-architecture-workspace · GitHub","url":"https://github.com/erdincdegirmenci/dotnet-clean-architecture-workspace","attribution":"GitHub","pub_date":null,"snippet":null,"thumbnail_url":"https://images.openai.com/static-rsc-1/xUIjbRFPwgSf03TaDaSJUSISbzPg2og-FM0sKVG3FIGt5Ijjisw2GkfuI0bseVw6uRzufbtvF40fMqQh8WAJe3JTY8gekqurhCqkcTMQ4C6eMrXtukgrDN8PH-zqqvMFgk_U-aez3Um4o_lOkqJJTvP5xMgvHLmug2o-9Xh-PQA0BLzgSNvNdvLGM-rcz7LJ7XRFqD0-NcvQ8TlAPMbllqVWT2eIFs7xESSlwTaQoLA","attribution_segments":null,"supporting_websites":[],"refs":[{"turn_index":0,"ref_type":"view","ref_index":0}],"hue":null,"attributions":null}],"error":null,"style":null,"fallback_items":null,"status":"done"},"showLoginRequiredCard":false}
-
 Infrastructure
 
 The workspace is designed to support a distributed application environment.
