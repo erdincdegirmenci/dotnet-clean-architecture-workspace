@@ -8,70 +8,14 @@ Architecture
 
 The solution is organized around the following layers:
 
-┌─────────────────────────────────────────────┐
-│                  API Layer                   │
-│              Template.Api                   │
-│     Controllers / Middleware / Filters      │
-└──────────────────────┬──────────────────────┘
-                       │
-                       ▼
-┌─────────────────────────────────────────────┐
-│              Application Layer              │
-│           Template.Application              │
-│   Services / DTOs / Interfaces / Managers   │
-└──────────────────────┬──────────────────────┘
-                       │
-                       ▼
-┌─────────────────────────────────────────────┐
-│                Domain Layer                 │
-│              Template.Domain                │
-│        Entities / Business Rules            │
-└─────────────────────────────────────────────┘
-                       ▲
-                       │
-        ┌──────────────┼──────────────┐
-        │              │              │
-        ▼              ▼              ▼
-┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-│ Persistence  │ │Infrastructure│ │   Identity   │
-│              │ │              │ │              │
-│ EF / Data    │ │ Kafka /      │ │ Auth /       │
-│ Access       │ │ Integrations │ │ Authorization│
-└──────────────┘ └──────────────┘ └──────────────┘
+<img width="309" height="537" alt="image" src="https://github.com/user-attachments/assets/5353f141-bf58-4cac-935f-00603ed778f0" />
 
 
 The architecture keeps business logic independent from infrastructure and framework-specific concerns.
 
 Project Structure
-.
-├── src
-│   ├── Template.Api
-│   ├── Template.Application
-│   ├── Template.Config
-│   ├── Template.Domain
-│   ├── Template.Identity
-│   ├── Template.Infrastructure
-│   ├── Template.Persistence
-│   └── Template.Shared
-│
-├── tests
-│   └── Template.Tests
-│
-├── logstash
-│   └── logstash.conf
-│
-├── docker-compose.yml
-├── docker-compose.override.yml
-├── docker-compose.dcproj
-├── dotnet-template.sln
-├── launchSettings.json
-├── LICENSE
-└── README.md
+<img width="180" height="391" alt="image" src="https://github.com/user-attachments/assets/d32f96be-8240-4a22-915b-97a7ac21530d" />
 
-
-The repository currently separates API, Application, Domain, Configuration, Identity, Infrastructure, Persistence and Shared concerns into individual projects. {"fallbackMarkdown":"(GitHub
-)","reference":{"matched_text":"","prefix":null,"start_idx":2762,"end_idx":2779,"safe_urls":["https://github.com/erdincdegirmenci/dotnet-clean-architecture-workspace"],"refs":[],"alt":"(GitHub
-)","prompt_text":null,"type":"grouped_webpages","items":[{"title":"GitHub - erdincdegirmenci/dotnet-clean-architecture-workspace · GitHub","url":"https://github.com/erdincdegirmenci/dotnet-clean-architecture-workspace","attribution":"GitHub","pub_date":null,"snippet":null,"thumbnail_url":"https://images.openai.com/static-rsc-1/xUIjbRFPwgSf03TaDaSJUSISbzPg2og-FM0sKVG3FIGt5Ijjisw2GkfuI0bseVw6uRzufbtvF40fMqQh8WAJe3JTY8gekqurhCqkcTMQ4C6eMrXtukgrDN8PH-zqqvMFgk_U-aez3Um4o_lOkqJJTvP5xMgvHLmug2o-9Xh-PQA0BLzgSNvNdvLGM-rcz7LJ7XRFqD0-NcvQ8TlAPMbllqVWT2eIFs7xESSlwTaQoLA","attribution_segments":null,"supporting_websites":[],"refs":[{"turn_index":0,"ref_type":"view","ref_index":0}],"hue":null,"attributions":null}],"error":null,"style":null,"fallback_items":null,"status":"done"},"showLoginRequiredCard":false}
 
 Projects
 Template.Api
