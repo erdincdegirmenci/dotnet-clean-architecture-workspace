@@ -255,42 +255,27 @@ Domain
 
 Keep business rules in the Domain layer.
 
-Domain
-  ├── Entities
-  ├── Value Objects
-  ├── Domain Rules
-  └── Domain Abstractions
+<img width="195" height="118" alt="image" src="https://github.com/user-attachments/assets/8d67486c-8dea-45c4-b67d-6f00e36d4618" />
 
 Application
 
 Application logic should depend on abstractions rather than infrastructure implementations.
 
-Application
-  ├── DTOs
-  ├── Interfaces
-  ├── Services
-  ├── Managers
-  ├── Repositories
-  └── Mapping
+<img width="143" height="155" alt="image" src="https://github.com/user-attachments/assets/9af8f407-ec34-4841-b310-d27442767e1f" />
+
 
 Infrastructure
 
 Infrastructure-specific implementations should remain outside the Domain layer.
 
-Infrastructure
-  ├── Kafka
-  ├── External Services
-  └── Infrastructure Implementations
+<img width="290" height="101" alt="image" src="https://github.com/user-attachments/assets/3f0ee7c3-82e9-4dd6-952f-4db07ecba315" />
 
 API
 
 The API layer should focus primarily on HTTP concerns.
 
-Api
-  ├── Controllers
-  ├── Middleware
-  ├── Filters
-  └── HTTP Configuration
+<img width="226" height="135" alt="image" src="https://github.com/user-attachments/assets/bc5c7090-b3a2-4307-a92b-5e8e07f6a7e6" />
+
 
 Why Clean Architecture?
 
@@ -305,17 +290,7 @@ Easier to evolve over time
 
 The most important principle is keeping business logic independent from external technologies.
 
-        Frameworks & Infrastructure
-                  │
-                  ▼
-        ┌────────────────────┐
-        │    Application     │
-        └─────────┬──────────┘
-                  │
-                  ▼
-        ┌────────────────────┐
-        │      Domain        │
-        └────────────────────┘
+<img width="292" height="253" alt="image" src="https://github.com/user-attachments/assets/706c4b60-d649-4894-be82-19c90dc500c7" />
 
 When to Use This Repository
 
